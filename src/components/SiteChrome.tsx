@@ -2,7 +2,18 @@ import { Link } from "@tanstack/react-router";
 import { Gauge, MapPin, Phone, Search, ShieldCheck } from "lucide-react";
 import { IMG } from "@/lib/images";
 import { useCart } from "@/lib/cart";
-import { WORKSHOP_PHONE_DISPLAY, WORKSHOP_TEL_HREF } from "@/lib/catalog";
+import { WORKSHOP_PHONE_DISPLAY, whatsappUrl } from "@/lib/catalog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function SiteHeader() {
   const { items } = useCart();
@@ -21,14 +32,34 @@ export function SiteHeader() {
         <div className="hidden items-center gap-2 rounded-full bg-accent px-3 py-1.5 font-mono text-xs text-accent-foreground xl:flex">
           <span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> Oficina Aberta · Box 4 Disponível
         </div>
-        <a
-          href={WORKSHOP_TEL_HREF}
-          aria-label={`Ligar para a oficina: ${WORKSHOP_PHONE_DISPLAY}`}
-          className="flex items-center gap-2 rounded-lg px-2 py-1.5 font-mono text-sm transition-colors hover:bg-muted"
-        >
-          <Phone className="h-4 w-4 text-tertiary" />
-          <span className="hidden sm:inline">{WORKSHOP_PHONE_DISPLAY}</span>
-        </a>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              type="button"
+              aria-label={`Falar com a oficina no WhatsApp: ${WORKSHOP_PHONE_DISPLAY}`}
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 font-mono text-sm transition-colors hover:bg-muted"
+            >
+              <Phone className="h-4 w-4 text-tertiary" />
+              <span className="hidden sm:inline">{WORKSHOP_PHONE_DISPLAY}</span>
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Falar connosco no WhatsApp?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Vai abrir uma conversa em branco com a oficina ({WORKSHOP_PHONE_DISPLAY}) para escrever o que quiser.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Não, ficar no site</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+                  Sim, abrir WhatsApp
+                </a>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <div className="ml-auto hidden items-center gap-2 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground md:flex">
           <Search className="h-4 w-4" /> Pesquisar peças, serviços…
         </div>

@@ -33,10 +33,10 @@ function Checkout() {
   const [slot, setSlot] = useState("10:00");
   const t = computeTotals(cart.items, cart.coupon, pickup ? PICKUP_FEE : 0);
   const [tried, setTried] = useState(false);
-  const phoneOk = f.phone.replace(/\D/g, "").length >= 9;
+  const phoneOk = f.phone.trim().length > 0;
   const missing = [
     !f.name.trim() && "nome",
-    !phoneOk && "telemóvel (mín. 9 dígitos)",
+    !phoneOk && "telemóvel",
     !f.plate.trim() && "matrícula",
   ].filter(Boolean) as string[];
   const bad = (invalid: boolean) => (tried && invalid ? " border-destructive" : "");
