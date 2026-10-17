@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, MessageCircle, Truck, Warehouse } from "lucide-react";
-import { PICKUP_FEE, WORKSHOP_PHONE, eur, getService } from "@/lib/catalog";
+import { toast } from "sonner";
+import { PICKUP_FEE, eur, getService, whatsappUrl } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { computeTotals } from "@/lib/pricing";
 import { Totals } from "./orcamento";
@@ -31,13 +32,20 @@ function Checkout() {
   const [day, setDay] = useState(0);
   const [slot, setSlot] = useState("10:00");
   const t = computeTotals(cart.items, cart.coupon, pickup ? PICKUP_FEE : 0);
-  const valid = f.name.trim() && f.phone.trim() && f.plate.trim() && cart.items.length > 0;
+  const [tried, setTried] = useState(false);
+  const phoneOk = f.phone.replace(/\D/g, "").length >= 9;
+  const missing = [
+    !f.name.trim() && "nome",
+    !phoneOk && "telemóvel (mín. 9 dígitos)",
+    !f.plate.trim() && "matrícula",
+  ].filter(Boolean) as string[];
+  const bad = (invalid: boolean) => (tried && invalid ? " border-destructive" : "");
   const dateLabel = days[day]?.toLocaleDateString("pt-PT", { weekday: "long", day: "numeric", month: "long" });
 
   const message = [
     "Olá AutoPro! Novo pedido de agendamento:",
     `Nome: ${f.name}`, `Telemóvel: ${f.phone}`, f.email && `Email: ${f.email}`,
-    `Viatura: ${f.car} (${f.plate})`,
+    `Viatura: ${f.car.trim() ? `${f.car.trim()} ` : ""}(${f.plate.trim()})`,
     ...cart.items.map((i) => `• ${getService(i.serviceId)?.title} x${i.qty}`),
     `Modalidade: ${pickup ? "Recolha & Entrega" : "Na oficina"}`,
     `Data: ${dateLabel} às ${slot}`, `Total estimado: ${eur(t.total)}`,
@@ -57,10 +65,10 @@ function Checkout() {
           <section className="surface-card p-6">
             <h2 className="text-xl font-semibold">1. Dados do Titular e Viatura</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <input className={input} placeholder="Nome completo *" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
-              <input className={input} placeholder="Telemóvel / WhatsApp *" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
+              <input className={input + bad(!f.name.trim())} placeholder="Nome completo *" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+              <input className={input + bad(!phoneOk)} type="tel" inputMode="tel" autoComplete="tel" placeholder="Telemóvel / WhatsApp *" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
               <input className={`${input} sm:col-span-2`} type="email" placeholder="Email (orçamento & fatura)" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
-              <input className={`${input} font-mono`} placeholder="Matrícula * (ex: 42-XX-89)" value={f.plate} onChange={(e) => setF({ ...f, plate: e.target.value.toUpperCase() })} />
+              <input className={`${input} font-mono${bad(!f.plate.trim())}`} placeholder="Matrícula * (ex: 42-XX-89)" value={f.plate} onChange={(e) => setF({ ...f, plate: e.target.value.toUpperCase() })} />
               <input className={input} placeholder="Marca e modelo" value={f.car} onChange={(e) => setF({ ...f, car: e.target.value })} />
             </div>
           </section>
@@ -83,9 +91,19 @@ function Checkout() {
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{SLOTS.map((s) => (
               <button key={s} onClick={() => setSlot(s)} className={`rounded-lg py-3 font-mono font-semibold ${slot === s ? "bg-primary-strong text-primary-foreground" : "bg-muted"}`}>{s}</button>))}</div>
           </section>
-          <a aria-disabled={!valid} href={valid ? `https://wa.me/${WORKSHOP_PHONE}?text=${encodeURIComponent(message)}` : undefined} target="_blank" rel="noreferrer"
-            className={`flex items-center gap-4 rounded-2xl bg-whatsapp p-6 text-whatsapp-foreground shadow-float ${valid ? "" : "pointer-events-none opacity-50"}`}>
-            <MessageCircle className="h-10 w-10" /><div><div className="font-display text-2xl font-bold">Enviar Pedido pelo WhatsApp</div><div className="text-sm opacity-90">{valid ? "Confirmação do chefe de oficina em menos de 15 minutos." : "Preencha nome, telemóvel e matrícula."}</div></div>
+          <a
+            href={whatsappUrl(message)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              if (missing.length) {
+                e.preventDefault();
+                setTried(true);
+                toast.error(`Preencha: ${missing.join(", ")}.`);
+              }
+            }}
+            className={`flex items-center gap-4 rounded-2xl bg-whatsapp p-6 text-whatsapp-foreground shadow-float transition-opacity ${missing.length ? "opacity-60" : "hover:opacity-90"}`}>
+            <MessageCircle className="h-10 w-10" /><div><div className="font-display text-2xl font-bold">Enviar Pedido pelo WhatsApp</div><div className="text-sm opacity-90">{missing.length ? "Preencha nome, telemóvel e matrícula." : "Confirmação do chefe de oficina em menos de 15 minutos."}</div></div>
           </a>
         </div>
         <aside className="surface-card h-fit p-6">

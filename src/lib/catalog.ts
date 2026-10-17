@@ -155,7 +155,12 @@ export const COUPONS: Record<string, number> = { PROAUTO24: 0.1 };
 export const ECO_FEE = 4.5;
 export const PICKUP_FEE = 15;
 export const VAT_RATE = 0.23;
+// Número da oficina: apenas dígitos, com indicativo do país (usado em wa.me e tel:).
 export const WORKSHOP_PHONE = "351210999888";
+export const WORKSHOP_PHONE_DISPLAY = "+351 210 999 888";
+export const WORKSHOP_TEL_HREF = `tel:+${WORKSHOP_PHONE}`;
+export const whatsappUrl = (text?: string) =>
+  `https://wa.me/${WORKSHOP_PHONE}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 
 export const eur = (n: number) =>
   new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);

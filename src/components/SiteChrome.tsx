@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Gauge, MapPin, Phone, Search, ShieldCheck } from "lucide-react";
 import { IMG } from "@/lib/images";
 import { useCart } from "@/lib/cart";
+import { WORKSHOP_PHONE_DISPLAY, WORKSHOP_TEL_HREF } from "@/lib/catalog";
 
 export function SiteHeader() {
   const { items } = useCart();
@@ -20,8 +21,13 @@ export function SiteHeader() {
         <div className="hidden items-center gap-2 rounded-full bg-accent px-3 py-1.5 font-mono text-xs text-accent-foreground xl:flex">
           <span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> Oficina Aberta · Box 4 Disponível
         </div>
-        <a href="tel:+351210999888" className="hidden items-center gap-2 font-mono text-sm md:flex">
-          <Phone className="h-4 w-4 text-tertiary" /> +351 210 999 888
+        <a
+          href={WORKSHOP_TEL_HREF}
+          aria-label={`Ligar para a oficina: ${WORKSHOP_PHONE_DISPLAY}`}
+          className="flex items-center gap-2 rounded-lg px-2 py-1.5 font-mono text-sm transition-colors hover:bg-muted"
+        >
+          <Phone className="h-4 w-4 text-tertiary" />
+          <span className="hidden sm:inline">{WORKSHOP_PHONE_DISPLAY}</span>
         </a>
         <div className="ml-auto hidden items-center gap-2 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground md:flex">
           <Search className="h-4 w-4" /> Pesquisar peças, serviços…
