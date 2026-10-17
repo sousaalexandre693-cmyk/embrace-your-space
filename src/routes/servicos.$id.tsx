@@ -39,7 +39,7 @@ function Detail() {
   const [addons, setAddons] = useState<string[]>(existing?.addons ?? []);
   const [qty, setQty] = useState(existing?.qty ?? 1);
   const gallery = s.gallery ?? [{ src: s.image, label: s.kicker }];
-  const [img, setImg] = useState(gallery[0].src);
+  const [img, setImg] = useState(gallery[0]?.src ?? s.image);
   const total = lineTotal({ serviceId: id, addons, qty });
 
   return (
