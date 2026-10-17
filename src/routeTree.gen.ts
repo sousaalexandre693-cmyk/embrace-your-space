@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as ServicosIdRouteImport } from './routes/servicos.$id'
@@ -17,6 +18,11 @@ import { Route as ServicosIdRouteImport } from './routes/servicos.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogoRoute = CatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -37,12 +43,14 @@ const ServicosIdRoute = ServicosIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/orcamento': typeof OrcamentoRoute
   '/servicos/$id': typeof ServicosIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/orcamento': typeof OrcamentoRoute
   '/servicos/$id': typeof ServicosIdRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/orcamento': typeof OrcamentoRoute
   '/servicos/$id': typeof ServicosIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout' | '/orcamento' | '/servicos/$id'
+  fullPaths: '/' | '/catalogo' | '/checkout' | '/orcamento' | '/servicos/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkout' | '/orcamento' | '/servicos/$id'
-  id: '__root__' | '/' | '/checkout' | '/orcamento' | '/servicos/$id'
+  to: '/' | '/catalogo' | '/checkout' | '/orcamento' | '/servicos/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/catalogo'
+    | '/checkout'
+    | '/orcamento'
+    | '/servicos/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
   OrcamentoRoute: typeof OrcamentoRoute
   ServicosIdRoute: typeof ServicosIdRoute
@@ -76,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogo': {
+      id: '/catalogo'
+      path: '/catalogo'
+      fullPath: '/catalogo'
+      preLoaderRoute: typeof CatalogoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
   OrcamentoRoute: OrcamentoRoute,
   ServicosIdRoute: ServicosIdRoute,
@@ -111,13 +135,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

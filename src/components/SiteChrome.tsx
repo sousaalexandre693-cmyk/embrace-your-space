@@ -37,7 +37,7 @@ export function SiteHeader() {
             <button
               type="button"
               aria-label={`Falar com a oficina no WhatsApp: ${WORKSHOP_PHONE_DISPLAY}`}
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 font-mono text-sm transition-colors hover:bg-muted"
+              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-2 py-1.5 font-mono text-sm transition-colors hover:bg-muted"
             >
               <Phone className="h-4 w-4 text-tertiary" />
               <span className="hidden sm:inline">{WORKSHOP_PHONE_DISPLAY}</span>
@@ -72,7 +72,8 @@ export function SiteHeader() {
         </div>
       </div>
       <nav className="mx-auto flex max-w-7xl items-center gap-6 overflow-x-auto px-4 md:px-8">
-        <Link to="/" className={nav} activeProps={active} activeOptions={{ exact: true }}>Catálogo de Serviços</Link>
+        <Link to="/" className={nav} activeProps={active} activeOptions={{ exact: true }}>Início</Link>
+        <Link to="/catalogo" className={nav} activeProps={active}>Catálogo de Serviços</Link>
         <Link to="/orcamento" className={nav} activeProps={active}>Orçamento / Carrinho ({items.length} itens)</Link>
         <Link to="/checkout" className={nav} activeProps={active}>Agendamentos</Link>
         <span className="ml-auto hidden items-center gap-1.5 rounded-md bg-accent px-2 py-1 mono-label text-accent-foreground sm:flex">

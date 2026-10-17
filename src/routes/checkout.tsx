@@ -54,7 +54,7 @@ function Checkout() {
   const input = "w-full rounded-lg border border-input bg-muted px-4 py-3 text-sm outline-none focus:border-primary";
 
   if (!cart.items.length)
-    return <div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-bold">Sem serviços para agendar</h1><Link to="/" className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground">Ver catálogo</Link></div>;
+    return <div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-bold">Sem serviços para agendar</h1><Link to="/catalogo" className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground">Ver catálogo</Link></div>;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-8">

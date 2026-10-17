@@ -14,4 +14,11 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("serves the landing page at / and the catalog at /catalogo", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    expect(router.matchRoutes("/").at(-1)?.routeId).toBe("/");
+    expect(router.matchRoutes("/catalogo").at(-1)?.routeId).toBe("/catalogo");
+  });
 });

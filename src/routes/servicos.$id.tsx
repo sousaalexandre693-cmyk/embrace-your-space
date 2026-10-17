@@ -44,7 +44,7 @@ function Detail() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-8">
-      <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" />Catálogo de Serviços / <span className="font-semibold text-foreground">{s.title}</span></Link>
+      <Link to="/catalogo" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" />Catálogo de Serviços / <span className="font-semibold text-foreground">{s.title}</span></Link>
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-6">
           <div className="surface-card overflow-hidden">

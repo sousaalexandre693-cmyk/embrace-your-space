@@ -25,7 +25,7 @@ function Cart() {
   const t = computeTotals(cart.items, cart.coupon);
 
   if (!cart.items.length)
-    return <div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-bold">O seu orçamento está vazio</h1><p className="mt-2 text-muted-foreground">Escolha serviços no catálogo para começar.</p><Link to="/" className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground">Ver catálogo</Link></div>;
+    return <div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-bold">O seu orçamento está vazio</h1><p className="mt-2 text-muted-foreground">Escolha serviços no catálogo para começar.</p><Link to="/catalogo" className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground">Ver catálogo</Link></div>;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-8">
